@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "RecipeFlow"
 include(":app")
- 
+include(":data")
+include(":domain")
