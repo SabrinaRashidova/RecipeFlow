@@ -5,5 +5,6 @@ data class Recipe(
     val title: String,
     val imageUrl: String,
     val usedIngredientCount: Int,
-    val missedIngredientCount: Boolean = false
+    val missedIngredientCount: Int,
+    val isFavorite: Boolean = false
 )
