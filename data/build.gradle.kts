@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -45,6 +46,11 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.logging.interceptor)
+
+    val room_version = "2.8.4"
+    implementation("androidx.room:room-runtime:${room_version}")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:${room_version}")
 
     implementation(project(":domain"))
 
