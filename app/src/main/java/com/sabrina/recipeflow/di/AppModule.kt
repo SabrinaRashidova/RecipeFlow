@@ -1,4 +1,4 @@
-package com.sabrina.recipeflow.app
+package com.sabrina.recipeflow.di
 
 import com.sabrina.domain.repository.RecipeRepository
 import com.sabrina.domain.usecase.SearchRecipesUseCase
@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 object AppModule {
 
     @Provides
-    fun provideSearchRecipesUseCase(repository: RecipeRepository) : SearchRecipesUseCase{
+    fun provideSearchRecipesUseCase(repository: RecipeRepository) : SearchRecipesUseCase {
         return SearchRecipesUseCase(repository)
     }
 }
