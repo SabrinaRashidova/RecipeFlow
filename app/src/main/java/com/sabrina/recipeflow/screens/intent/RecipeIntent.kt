@@ -1,4 +1,4 @@
-package com.sabrina.recipeflow.intent
+package com.sabrina.recipeflow.screens.intent
 
 import com.sabrina.domain.model.Recipe
 
