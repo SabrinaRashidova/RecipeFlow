@@ -1,4 +1,4 @@
-package com.sabrina.recipeflow.screens.state
+package com.sabrina.recipeflow.presentation.state
 
 import com.sabrina.domain.model.Recipe
 

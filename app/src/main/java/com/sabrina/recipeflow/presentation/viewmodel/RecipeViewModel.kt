@@ -1,11 +1,11 @@
-package com.sabrina.recipeflow.screens.viewmodel
+package com.sabrina.recipeflow.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sabrina.domain.repository.RecipeRepository
 import com.sabrina.domain.usecase.SearchRecipesUseCase
-import com.sabrina.recipeflow.screens.intent.RecipeIntent
-import com.sabrina.recipeflow.screens.state.RecipeState
+import com.sabrina.recipeflow.presentation.intent.RecipeIntent
+import com.sabrina.recipeflow.presentation.state.RecipeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -1,4 +1,4 @@
-package com.sabrina.recipeflow.screens
+package com.sabrina.recipeflow.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

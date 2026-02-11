@@ -1,4 +1,4 @@
-package com.sabrina.recipeflow.screens
+package com.sabrina.recipeflow.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.grid.GridCells
