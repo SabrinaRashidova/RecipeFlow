@@ -65,6 +65,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    implementation(libs.androidx.navigation.compose)
+
     implementation(project(":domain"))
     implementation(project(":data"))
 

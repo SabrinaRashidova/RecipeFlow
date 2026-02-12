@@ -35,12 +35,13 @@ import com.sabrina.domain.model.Recipe
 @Composable
 fun RecipeCard(
     recipe: Recipe,
-    onFavoriteClick: (Recipe) -> Unit
+    onFavoriteClick: (Recipe) -> Unit,
+    onRecipeClick: (Int) -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {  },
+            .clickable { onRecipeClick(recipe.id) },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {

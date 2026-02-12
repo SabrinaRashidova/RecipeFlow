@@ -33,7 +33,8 @@ import com.sabrina.recipeflow.ui.components.RecipeGrid
 
 @Composable
 fun RecipeScreen(
-    viewModel: RecipeViewModel = hiltViewModel()
+    viewModel: RecipeViewModel = hiltViewModel(),
+    onNavigateToDetail: (Int) -> Unit
 ){
     val state by viewModel.state.collectAsState()
 
@@ -96,7 +97,8 @@ fun RecipeScreen(
                 else -> {
                     RecipeGrid(
                         recipes = state.recipes,
-                        onFavoriteClick = { viewModel.onIntent(RecipeIntent.ToggleFavorite(it)) }
+                        onFavoriteClick = { viewModel.onIntent(RecipeIntent.ToggleFavorite(it)) },
+                        onRecipeClick = { id -> onNavigateToDetail(id) }
                     )
                 }
             }
