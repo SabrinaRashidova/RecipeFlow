@@ -6,6 +6,8 @@ import com.sabrina.data.mapper.toDomain
 import com.sabrina.data.remote.SpoonacularApi
 import com.sabrina.domain.model.Recipe
 import com.sabrina.domain.repository.RecipeRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class RecipeRepositoryImpl(
     private val api: SpoonacularApi,
@@ -35,6 +37,12 @@ class RecipeRepositoryImpl(
             recipeDao.deleteFavorite(entity)
         } else {
             recipeDao.insertFavorite(entity)
+        }
+    }
+
+    override fun getFavoriteRecipes(): Flow<List<Recipe>> {
+        return recipeDao.getAllFavorites().map {entities ->
+            entities.map { it.toDomain()}
         }
     }
 }
