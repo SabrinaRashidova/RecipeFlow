@@ -2,6 +2,7 @@ package com.sabrina.recipeflow.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sabrina.domain.model.Recipe
 import com.sabrina.domain.repository.RecipeRepository
 import com.sabrina.domain.usecase.SearchRecipesUseCase
 import com.sabrina.recipeflow.presentation.intent.RecipeIntent
@@ -9,6 +10,7 @@ import com.sabrina.recipeflow.presentation.state.RecipeState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -43,9 +45,7 @@ class RecipeViewModel @Inject constructor(
             }
             is RecipeIntent.SearchRecipes -> executeSearch()
             is RecipeIntent.ToggleFavorite -> {
-                viewModelScope.launch {
-                    repository.toggleFavorite(intent.recipe)
-                }
+                toggleFavorite(intent.recipe)
             }
         }
     }
@@ -54,13 +54,34 @@ class RecipeViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true, error = null) }
 
+            val favoriteIds = repository.getFavoriteRecipes().first().map { it.id }.toSet()
+
             searchRecipesUseCase(_state.value.ingredients)
-                .onSuccess { list ->
-                    _state.update { it.copy(recipes = list, isLoading = false) }
+                .onSuccess { networkList ->
+                    val syncedList = networkList.map { recipe ->
+                        if (favoriteIds.contains(recipe.id)) {
+                            recipe.copy(isFavorite = true)
+                        } else {
+                            recipe
+                        }
+                    }
+
+                    _state.update { it.copy(recipes = syncedList, isLoading = false) }
                 }
                 .onFailure { e ->
                     _state.update { it.copy(error = e.message, isLoading = false) }
                 }
+        }
+    }
+
+    private fun toggleFavorite(recipe: Recipe) {
+        viewModelScope.launch {
+            repository.toggleFavorite(recipe)
+
+            val updatedRecipes = _state.value.recipes.map {
+                if (it.id == recipe.id) it.copy(isFavorite = !it.isFavorite) else it
+            }
+            _state.update { it.copy(recipes = updatedRecipes) }
         }
     }
 }
