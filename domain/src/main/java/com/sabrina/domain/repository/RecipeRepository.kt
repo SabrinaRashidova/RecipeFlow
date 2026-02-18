@@ -1,6 +1,7 @@
 package com.sabrina.domain.repository
 
 import com.sabrina.domain.model.Recipe
+import com.sabrina.domain.model.RecipeDetail
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
@@ -11,4 +12,6 @@ interface RecipeRepository {
     suspend fun toggleFavorite(recipe: Recipe)
 
     fun getFavoriteRecipes(): Flow<List<Recipe>>
+
+    suspend fun getRecipeDetails(id: Int) : Result<RecipeDetail>
 }

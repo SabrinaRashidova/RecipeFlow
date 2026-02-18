@@ -25,7 +25,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sabrina.recipeflow.ui.navigation.Screen
 import com.sabrina.recipeflow.ui.navigation.SetupNavGraph
-import com.sabrina.recipeflow.ui.screens.RecipeScreen
 import com.sabrina.recipeflow.ui.theme.RecipeFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -47,7 +46,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
@@ -55,38 +53,57 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val showBottomBar = currentRoute == Screen.RecipeSearch.route ||
+            currentRoute == Screen.Favorites.route
+
     Scaffold(
         bottomBar = {
-            NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceVariant, tonalElevation = 8.dp) {
-                NavigationBarItem(
-                    selected = currentRoute == Screen.RecipeSearch.route,
-                    onClick = {
-                        navController.navigate(Screen.RecipeSearch.route){
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
-                        }
-                    },
-                    icon = { Icon(Icons.Default.Search,contentDescription = "Search") },
-                    label = { Text("Search") }
-                )
+            if (showBottomBar) {
+                NavigationBar(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    tonalElevation = 8.dp
+                ) {
+                    NavigationBarItem(
+                        selected = currentRoute == Screen.RecipeSearch.route,
+                        onClick = {
+                            navController.navigate(Screen.RecipeSearch.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                        label = { Text("Search") }
+                    )
 
-                NavigationBarItem(
-                    selected = currentRoute == Screen.Favorites.route,
-                    onClick = {
-                        navController.navigate(Screen.Favorites.route){
-                            popUpTo(navController.graph.startDestinationId)
-                            launchSingleTop = true
-                        }
-                    },
-                    icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
-                    label = { Text("Favorites") }
-                )
+                    NavigationBarItem(
+                        selected = currentRoute == Screen.Favorites.route,
+                        onClick = {
+                            navController.navigate(Screen.Favorites.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Favorite, contentDescription = "Favorites") },
+                        label = { Text("Favorites") }
+                    )
+                }
             }
         }
-    ) {innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            SetupNavGraph(navController = navController)
+    ) { innerPadding ->
+        val paddingModifier = if (showBottomBar) {
+            Modifier.padding(innerPadding)
+        } else {
+            Modifier.padding(top = innerPadding.calculateTopPadding())
         }
 
+        Box(modifier = paddingModifier) {
+            SetupNavGraph(navController = navController)
+        }
     }
 }
