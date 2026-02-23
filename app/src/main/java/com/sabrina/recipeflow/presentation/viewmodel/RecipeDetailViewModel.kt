@@ -23,7 +23,7 @@ class RecipeDetailViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     init {
-
+        fetchDetails()
     }
 
     private fun fetchDetails(){

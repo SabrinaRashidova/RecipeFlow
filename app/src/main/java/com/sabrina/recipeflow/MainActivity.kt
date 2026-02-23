@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sabrina.recipeflow.ui.navigation.Screen
@@ -49,12 +50,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute == Screen.RecipeSearch.route ||
-            currentRoute == Screen.Favorites.route
+    val isDetailScreen = currentRoute?.contains("recipe_detail") == true
+    val showBottomBar = !isDetailScreen && currentRoute != null
 
     Scaffold(
         bottomBar = {
@@ -67,7 +67,7 @@ fun MainScreen() {
                         selected = currentRoute == Screen.RecipeSearch.route,
                         onClick = {
                             navController.navigate(Screen.RecipeSearch.route) {
-                                popUpTo(navController.graph.startDestinationId) {
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -82,7 +82,7 @@ fun MainScreen() {
                         selected = currentRoute == Screen.Favorites.route,
                         onClick = {
                             navController.navigate(Screen.Favorites.route) {
-                                popUpTo(navController.graph.startDestinationId) {
+                                popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -96,13 +96,10 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        val paddingModifier = if (showBottomBar) {
-            Modifier.padding(innerPadding)
-        } else {
-            Modifier.padding(top = innerPadding.calculateTopPadding())
-        }
-
-        Box(modifier = paddingModifier) {
+        Box(modifier = Modifier.padding(
+            top = innerPadding.calculateTopPadding(),
+            bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp
+        )) {
             SetupNavGraph(navController = navController)
         }
     }
