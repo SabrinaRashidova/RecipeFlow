@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -39,6 +40,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    implementation(libs.google.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -48,13 +50,23 @@ dependencies {
     implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.logging.interceptor)
 
+    //room
     val room_version = "2.8.4"
     implementation("androidx.room:room-runtime:${room_version}")
     kapt("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-ktx:${room_version}")
 
+    //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+
+    //firebase
+    implementation(libs.firebase.bom)
+
+    implementation(libs.firebase.auth.ktx)
+
+    implementation(libs.firebase.analytics.ktx)
 
     implementation(project(":domain"))
 

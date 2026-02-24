@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -66,6 +68,12 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.firebase.bom)
+
+    implementation(libs.firebase.auth.ktx)
+
+    implementation(libs.firebase.analytics.ktx)
 
     implementation(project(":domain"))
     implementation(project(":data"))
