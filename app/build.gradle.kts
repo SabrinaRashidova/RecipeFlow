@@ -69,11 +69,13 @@ dependencies {
 
     implementation(libs.androidx.navigation.compose)
 
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
 
     implementation(libs.firebase.auth.ktx)
 
     implementation(libs.firebase.analytics.ktx)
+
+    implementation(libs.kotlinx.coroutines.play.services)
 
     implementation(project(":domain"))
     implementation(project(":data"))

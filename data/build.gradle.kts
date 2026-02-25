@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
     id ("com.google.dagger.hilt.android")
-    id("com.google.gms.google-services")
 }
 
 android {
@@ -40,7 +39,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.google.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -62,11 +60,10 @@ dependencies {
 
 
     //firebase
-    implementation(libs.firebase.bom)
-
+    implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
-
     implementation(libs.firebase.analytics.ktx)
+    implementation(libs.kotlinx.coroutines.play.services)
 
     implementation(project(":domain"))
 
