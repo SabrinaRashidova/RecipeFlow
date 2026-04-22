@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "798226948311",
+    "project_id": "recipeflow-e70f5",
+    "storage_bucket": "recipeflow-e70f5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798226948311:android:1cd45f6d245eb9d3bc9092",
+        "android_client_info": {
+          "package_name": "com.sabrina.recipeflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPJfEZgXN137zc2E_5jTrnIxuXmgrfnnw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

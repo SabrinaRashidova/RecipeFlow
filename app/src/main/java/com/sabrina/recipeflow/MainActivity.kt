@@ -18,29 +18,44 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.sabrina.data.local.UserPreferencesRepository
 import com.sabrina.recipeflow.ui.navigation.Screen
 import com.sabrina.recipeflow.ui.navigation.SetupNavGraph
+import com.sabrina.recipeflow.ui.screens.auth.AuthViewModel
 import com.sabrina.recipeflow.ui.theme.RecipeFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var userPreferences: UserPreferencesRepository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
             RecipeFlowTheme {
+                val isFirstTime by userPreferences.isFirstTime.collectAsState(initial = null)
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    isFirstTime?.let { firstTime ->
+                        val startRoute = if (firstTime) Screen.Welcome.route else Screen.RecipeSearch.route
+                        MainScreen(startDestination = startRoute)
+                    }
                 }
             }
         }
@@ -48,13 +63,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(
+    startDestination: String,
+    viewModel: AuthViewModel = hiltViewModel()
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     val isDetailScreen = currentRoute?.contains("recipe_detail") == true
-    val showBottomBar = !isDetailScreen && currentRoute != null
+    val isWelcomeScreen = currentRoute == Screen.Welcome.route
+    val showBottomBar = !isDetailScreen && !isWelcomeScreen && currentRoute != null
 
     Scaffold(
         bottomBar = {
@@ -96,11 +115,18 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
-        Box(modifier = Modifier.padding(
-            top = innerPadding.calculateTopPadding(),
-            bottom = if (showBottomBar) innerPadding.calculateBottomPadding() else 0.dp
-        )) {
-            SetupNavGraph(navController = navController)
+        Box(modifier = Modifier.padding(innerPadding)) {
+            SetupNavGraph(
+                navController = navController,
+                startDestination = startDestination,
+                onGetStarted = {
+                    viewModel.onGetStarted {
+                        navController.navigate(Screen.RecipeSearch.route) {
+                            popUpTo(Screen.Welcome.route) { inclusive = true }
+                        }
+                    }
+                }
+            )
         }
     }
 }

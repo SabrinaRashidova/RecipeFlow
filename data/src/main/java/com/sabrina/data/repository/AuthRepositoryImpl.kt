@@ -38,6 +38,13 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun signInAnonymously(): Result<Unit> {
+        return try {
+            auth.signInAnonymously().await()
+            Result.success(Unit)
+        } catch (e: Exception) { Result.failure(e)}
+    }
+
     override fun logout() {
         auth.signOut()
     }

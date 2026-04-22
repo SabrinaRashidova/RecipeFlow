@@ -65,6 +65,11 @@ dependencies {
     implementation(libs.firebase.analytics.ktx)
     implementation(libs.kotlinx.coroutines.play.services)
 
+
+    //datastore
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.kotlinx.coroutines.play.services)
+
     implementation(project(":domain"))
 
 }

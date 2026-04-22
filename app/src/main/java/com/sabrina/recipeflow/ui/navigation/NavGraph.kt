@@ -9,13 +9,20 @@ import androidx.navigation.navArgument
 import com.sabrina.recipeflow.ui.screens.FavoritesScreen
 import com.sabrina.recipeflow.ui.screens.RecipeDetailScreen
 import com.sabrina.recipeflow.ui.screens.RecipeScreen
+import com.sabrina.recipeflow.ui.screens.WelcomeScreen
 
 @Composable
-fun SetupNavGraph(navController: NavHostController){
+fun SetupNavGraph(navController: NavHostController,startDestination: String,onGetStarted: () -> Unit){
     NavHost(
         navController = navController,
-        startDestination = Screen.RecipeSearch.route
+        startDestination = startDestination
     ){
+        composable(route = Screen.Welcome.route) {
+            WelcomeScreen(
+                onGetStarted = onGetStarted
+            )
+        }
+
         composable(route = Screen.RecipeSearch.route) {
             RecipeScreen(
                 onNavigateToDetail = { id ->
