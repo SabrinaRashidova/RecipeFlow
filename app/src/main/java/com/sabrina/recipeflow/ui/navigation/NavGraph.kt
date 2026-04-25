@@ -27,6 +27,9 @@ fun SetupNavGraph(navController: NavHostController,startDestination: String,onGe
             RecipeScreen(
                 onNavigateToDetail = { id ->
                     navController.navigate(Screen.RecipeDetail.createRoute(id))
+                },
+                onNavigateToFavorites = {
+                    navController.navigate(Screen.Favorites.route)
                 }
             )
         }

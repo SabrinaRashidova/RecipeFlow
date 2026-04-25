@@ -1,20 +1,13 @@
 package com.sabrina.recipeflow.ui.screens
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,81 +19,116 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sabrina.recipeflow.presentation.intent.RecipeIntent
 import com.sabrina.recipeflow.presentation.viewmodel.RecipeViewModel
-import com.sabrina.recipeflow.ui.components.EmptyState
-import com.sabrina.recipeflow.ui.components.IngredientChips
-import com.sabrina.recipeflow.ui.components.IngredientInput
-import com.sabrina.recipeflow.ui.components.RecipeGrid
+import com.sabrina.recipeflow.ui.components.*
 
 @Composable
 fun RecipeScreen(
     viewModel: RecipeViewModel = hiltViewModel(),
-    onNavigateToDetail: (Int) -> Unit
-){
+    onNavigateToDetail: (Int) -> Unit,
+    onNavigateToFavorites: () -> Unit
+) {
     val state by viewModel.state.collectAsState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(BackgroundCream)
     ) {
-        Text(
-            text = "RecipeFlow",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+        RecipeHeader(
+            favoriteCount = 0,
+            onFavoritesClick = onNavigateToFavorites
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        IngredientInput(
-            query = state.searchQuery,
-            onQueryChange = { viewModel.onIntent(RecipeIntent.EnteredIngredient(it)) },
-            onAddClick = { viewModel.onIntent(RecipeIntent.AddIngredient) }
-        )
-
-        IngredientChips(
-            ingredients = state.ingredients,
-            onRemove = { viewModel.onIntent(RecipeIntent.RemoveIngredient(it)) }
-        )
-
-        Button(
-            onClick = { viewModel.onIntent(RecipeIntent.SearchRecipes) },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = state.ingredients.isNotEmpty() && !state.isLoading
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
-            Text("Find Recipes")
-        }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            when{
-                state.isLoading ->{
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                }
-                state.error != null ->{
-                    EmptyState(
-                        message = state.error ?: "An unexpected error occurred",
-                        icon = Icons.Default.Warning,
-                        onActionClick = { viewModel.onIntent(RecipeIntent.SearchRecipes) }
+            if (state.recipes.isEmpty() && !state.isLoading) {
+                item {
+                    Text(
+                        text = "What's in your kitchen?",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                    Text(
+                        text = "Add ingredients to discover amazing recipes you can make",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    IngredientInput(
+                        query = state.searchQuery,
+                        onQueryChange = { viewModel.onIntent(RecipeIntent.EnteredIngredient(it)) },
+                        onAddClick = { viewModel.onIntent(RecipeIntent.AddIngredient) }
                     )
                 }
-                state.recipes.isEmpty() && state.ingredients.isEmpty() -> {
-                    EmptyState(
-                        message = "Add some ingredients to get started!",
-                        icon = Icons.Default.Search
+
+                if (state.ingredients.isNotEmpty()) {
+                    item {
+                        SelectedIngredientsSection(
+                            ingredients = state.ingredients,
+                            onRemove = { viewModel.onIntent(RecipeIntent.RemoveIngredient(it)) },
+                            onClearAll = {}
+                        )
+                    }
+                }
+
+                item {
+                    PopularIngredientsSection(
+                        onIngredientClick = { viewModel.onIntent(RecipeIntent.EnteredIngredient(it)) }
                     )
                 }
-                state.recipes.isEmpty() && !state.isLoading -> {
-                    EmptyState(
-                        message = "We couldn't find any recipes with those ingredients.",
-                        icon = Icons.Default.Info
+            }
+
+
+            if (state.recipes.isNotEmpty() || state.isLoading) {
+                item {
+                    Text(
+                        text = "Found ${state.recipes.size} delicious recipes",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Gray,
+                        modifier = Modifier.padding(vertical = 16.dp)
                     )
                 }
-                else -> {
-                    RecipeGrid(
-                        recipes = state.recipes,
-                        onFavoriteClick = { viewModel.onIntent(RecipeIntent.ToggleFavorite(it)) },
-                        onRecipeClick = { id -> onNavigateToDetail(id) }
-                    )
+
+                if (state.isLoading) {
+                    item {
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                        }
+                    }
+                } else {
+                    items(state.recipes) { recipe ->
+                        RecipeCard(
+                            recipe = recipe,
+                            onFavoriteClick = { viewModel.onIntent(RecipeIntent.ToggleFavorite(recipe)) },
+                            onRecipeClick = { onNavigateToDetail(recipe.id) }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
+            }
+        }
+    }
+
+    if (state.ingredients.isNotEmpty() && state.recipes.isEmpty()) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+            Button(
+                onClick = { viewModel.onIntent(RecipeIntent.SearchRecipes) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = BrandOrange),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Icon(Icons.Default.Search, contentDescription = null)
+                Spacer(Modifier.width(8.dp))
+                Text("Find Recipes with ${state.ingredients.size} ingredients")
             }
         }
     }
