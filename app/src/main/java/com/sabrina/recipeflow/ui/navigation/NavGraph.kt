@@ -45,6 +45,9 @@ fun SetupNavGraph(navController: NavHostController,startDestination: String,onGe
             FavoritesScreen(
                 onNavigateToDetail = {id ->
                     navController.navigate(Screen.RecipeDetail.createRoute(id))
+                },
+                onBackClick = {
+                    navController.popBackStack()
                 }
             )
         }

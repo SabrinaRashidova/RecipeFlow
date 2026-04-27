@@ -20,10 +20,11 @@ fun RecipeGrid(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(recipes) {recipe ->
-            RecipeCard(recipe = recipe,
+            RecipeCard(
+                recipe = recipe,
                 onFavoriteClick = onFavoriteClick,
-                onRecipeClick = onRecipeClick
-                )
+                onClick = { onRecipeClick(recipe.id)}
+            )
         }
     }
 }

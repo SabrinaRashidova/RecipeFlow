@@ -7,7 +7,7 @@ import com.sabrina.data.local.entity.FavoriteRecipeEntity
 
 @Database(
     entities = [FavoriteRecipeEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class RecipeDatabase : RoomDatabase() {

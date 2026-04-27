@@ -29,7 +29,13 @@ class RecipeRepositoryImpl(
         val entity = FavoriteRecipeEntity(
             id = recipe.id,
             title = recipe.title,
-            imageUrl = recipe.imageUrl
+            imageUrl = recipe.imageUrl,
+            cuisine = recipe.cuisine,
+            cookingTime = recipe.cookingTime,
+            servings = recipe.servings,
+            difficulty = recipe.difficulty,
+            usedIngredientCount = recipe.usedIngredientCount,
+            missedIngredientCount = recipe.missedIngredientCount,
         )
 
         val isCurrentlyFavorite = recipeDao.isFavorite(recipe.id)

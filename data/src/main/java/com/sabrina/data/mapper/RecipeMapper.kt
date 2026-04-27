@@ -9,8 +9,17 @@ fun RecipeDto.toDomain() : Recipe{
         id = this.id,
         title = this.title,
         imageUrl = this.image,
-        usedIngredientCount = this.usedIngredientCount,
-        missedIngredientCount = this.missedIngredientCount
+        cuisine = cuisines?.firstOrNull() ?: "General",
+        cookingTime = "${readyInMinutes ?: 0} min",
+        servings = servings ?: 0,
+        difficulty = when {
+            (readyInMinutes ?: 0) < 30 -> "Easy"
+            (readyInMinutes ?: 0) < 60 -> "Medium"
+            else -> "Hard"
+        },
+        usedIngredientCount = this.usedIngredientCount ?: 0,
+        missedIngredientCount = this.missedIngredientCount ?: 0,
+        isFavorite = false
     )
 }
 
@@ -19,8 +28,26 @@ fun FavoriteRecipeEntity.toDomain() : Recipe {
         id = this.id,
         title = this.title,
         imageUrl = this.imageUrl,
-        usedIngredientCount = 0,
-        missedIngredientCount = 0,
+        cuisine = this.cuisine,
+        cookingTime = this.cookingTime,
+        servings = this.servings,
+        difficulty = this.difficulty,
+        usedIngredientCount = this.usedIngredientCount,
+        missedIngredientCount = this.missedIngredientCount,
         isFavorite = true
+    )
+}
+
+fun Recipe.toEntity(): FavoriteRecipeEntity {
+    return FavoriteRecipeEntity(
+        id = id,
+        title = title,
+        imageUrl = imageUrl,
+        cuisine = cuisine,
+        cookingTime = cookingTime,
+        servings = servings,
+        difficulty = difficulty,
+        usedIngredientCount = usedIngredientCount,
+        missedIngredientCount = missedIngredientCount
     )
 }

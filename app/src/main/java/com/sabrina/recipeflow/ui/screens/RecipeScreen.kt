@@ -106,7 +106,7 @@ fun RecipeScreen(
                         RecipeCard(
                             recipe = recipe,
                             onFavoriteClick = { viewModel.onIntent(RecipeIntent.ToggleFavorite(recipe)) },
-                            onRecipeClick = { onNavigateToDetail(recipe.id) }
+                            onClick = { onNavigateToDetail(recipe.id) }
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                     }

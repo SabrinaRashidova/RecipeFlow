@@ -22,7 +22,9 @@ object DatabaseModule {
             context,
             RecipeDatabase::class.java,
             RecipeDatabase.DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides
