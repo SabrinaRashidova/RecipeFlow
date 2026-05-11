@@ -9,7 +9,11 @@ interface RecipeRepository {
         ingredients: List<String>
     ) : Result<List<Recipe>>
 
+    suspend fun isFavoriteLocal(id: Int): Boolean
+
     suspend fun toggleFavorite(recipe: Recipe)
+
+    suspend fun toggleFavoriteDetail(recipe: RecipeDetail)
 
     fun getFavoriteRecipes(): Flow<List<Recipe>>
 

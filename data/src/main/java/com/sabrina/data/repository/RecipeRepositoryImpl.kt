@@ -25,6 +25,10 @@ class RecipeRepositoryImpl(
         }
     }
 
+    override suspend fun isFavoriteLocal(id: Int): Boolean {
+        return recipeDao.isFavorite(id)
+    }
+
     override suspend fun toggleFavorite(recipe: Recipe) {
         val entity = FavoriteRecipeEntity(
             id = recipe.id,
@@ -47,6 +51,27 @@ class RecipeRepositoryImpl(
         }
     }
 
+    override suspend fun toggleFavoriteDetail(recipe: RecipeDetail) {
+        val entity = FavoriteRecipeEntity(
+            id = recipe.id,
+            title = recipe.title,
+            imageUrl = recipe.imageUrl,
+            cookingTime = "${recipe.readyInMinutes} min",
+            servings = recipe.servings,
+            cuisine = "General",
+            difficulty = "Medium",
+            usedIngredientCount = 0,
+            missedIngredientCount = 0
+        )
+
+        val isCurrentlyFavorite = recipeDao.isFavorite(recipe.id)
+        if (isCurrentlyFavorite){
+            recipeDao.deleteFavorite(entity)
+        }else{
+            recipeDao.insertFavorite(entity)
+        }
+    }
+
     override fun getFavoriteRecipes(): Flow<List<Recipe>> {
         return recipeDao.getAllFavorites().map {entities ->
             entities.map { it.toDomain()}
@@ -56,7 +81,8 @@ class RecipeRepositoryImpl(
     override suspend fun getRecipeDetails(id: Int): Result<RecipeDetail> {
         return try {
             val response = api.getRecipeInformation(id,apiKey)
-            Result.success(response.toDomain())
+            val isFav = recipeDao.isFavorite(id)
+            Result.success(response.toDomain().copy(isFavorite = isFav))
         }catch (e: Exception) {
             Result.failure(e)
         }

@@ -9,5 +9,6 @@ data class RecipeDetail(
     val ingredients: List<String>,
     val readyInMinutes: Int,
     val servings: Int,
-    val healthScore: Int
+    val healthScore: Int,
+    val isFavorite: Boolean = false
 )

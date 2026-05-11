@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.RestaurantMenu
@@ -52,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.sabrina.recipeflow.presentation.intent.RecipeDetailIntent
 import com.sabrina.recipeflow.presentation.viewmodel.RecipeDetailViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,10 +99,10 @@ fun RecipeDetailScreen(
                                 Icon(Icons.Default.ArrowBack,contentDescription = "back", tint = Color.Black)
                             }
                             IconButton(
-                                onClick = {},
+                                onClick = {viewModel.onIntent(RecipeDetailIntent.ToggleFavorite)},
                                 modifier = Modifier.background(Color.White,CircleShape).size(40.dp)
                             ) {
-                                Icon(Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.Black)
+                                Icon(imageVector = if (recipe.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.Black)
                             }
                         }
 

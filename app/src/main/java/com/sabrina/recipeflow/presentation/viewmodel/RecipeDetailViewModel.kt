@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sabrina.domain.repository.RecipeRepository
+import com.sabrina.recipeflow.presentation.intent.RecipeDetailIntent
 import com.sabrina.recipeflow.presentation.state.RecipeDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,8 +31,34 @@ class RecipeDetailViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
             repository.getRecipeDetails(recipeId)
-                .onSuccess { details -> _state.update { it.copy(recipe = details, isLoading = false) } }
+                .onSuccess {details->
+                    val isFav = repository.isFavoriteLocal(recipeId)
+                    _state.update { it.copy(recipe = details.copy(isFavorite = isFav), isLoading = false) }
+                }
                 .onFailure { e -> _state.update { it.copy(error = e.message, isLoading = false) } }
         }
+    }
+
+    fun onIntent(intent: RecipeDetailIntent) {
+        when(intent){
+            is RecipeDetailIntent.LoadRecipe -> loadRecipe(intent.id)
+            is RecipeDetailIntent.ToggleFavorite -> toggleFavorite()
+        }
+    }
+
+    fun toggleFavorite(){
+        val currentRecipe = _state.value.recipe ?: return
+
+        viewModelScope.launch {
+            repository.toggleFavoriteDetail(currentRecipe)
+
+            _state.update { it.copy(
+                recipe = it.recipe?.copy(isFavorite = !it.recipe.isFavorite)
+            )}
+        }
+    }
+
+    private fun loadRecipe(id: Int) {
+
     }
 }
