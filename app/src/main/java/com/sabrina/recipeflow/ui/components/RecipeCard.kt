@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.sabrina.domain.model.Recipe
 import com.sabrina.recipeflow.ui.screens.BrandOrange
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.filled.FavoriteBorder
 import coil.compose.AsyncImage
 
 @Composable
@@ -77,12 +78,7 @@ fun RecipeCard(
                     color = Color.White,
                     shadowElevation = 4.dp
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Favorite,
-                        contentDescription = "Favorite",
-                        tint = Color.Red,
-                        modifier = Modifier.padding(8.dp)
-                    )
+                    Icon(imageVector = if (recipe.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder, contentDescription = "Favorite", tint = Color.Black, modifier = Modifier.padding(8.dp))
                 }
             }
 
