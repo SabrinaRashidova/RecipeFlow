@@ -18,8 +18,8 @@ class RecipeRepositoryImpl(
     override suspend fun searchRecipesByIngredients(ingredients: List<String>): Result<List<Recipe>> {
         return try {
             val ingredientString = ingredients.joinToString(",")
-            val response = api.findByIngredients(apiKey,ingredientString)
-            Result.success(response.map { it.toDomain() })
+            val response = api.searchRecipes(apiKey,ingredientString)
+            Result.success(response.results.map { it.toDomain() })
         }catch (e: Exception){
             Result.failure(e)
         }
