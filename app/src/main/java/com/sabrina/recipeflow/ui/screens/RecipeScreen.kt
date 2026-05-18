@@ -79,7 +79,10 @@ fun RecipeScreen(
 
                 item {
                     PopularIngredientsSection(
-                        onIngredientClick = { viewModel.onIntent(RecipeIntent.EnteredIngredient(it)) }
+                        onIngredientClick = { ingredient->
+                            viewModel.onIntent(RecipeIntent.EnteredIngredient(ingredient))
+                            viewModel.onIntent(RecipeIntent.AddIngredient)
+                        }
                     )
                 }
             }
