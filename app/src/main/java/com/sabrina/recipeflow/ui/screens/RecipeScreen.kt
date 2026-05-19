@@ -46,6 +46,18 @@ fun RecipeScreen(
         ) {
 
             if (state.recipes.isEmpty() && !state.isLoading) {
+
+                if (state.error != null){
+                    item {
+                        Text(
+                            text = "Error: ${state.error}",
+                            color = Color.Red,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+                }
+
                 item {
                     Text(
                         text = "What's in your kitchen?",
@@ -104,6 +116,16 @@ fun RecipeScreen(
                             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                         }
                     }
+//                }else if (state.ingredients.isNotEmpty() && !state.isLoading && state.error == null){
+//                    item {
+//                        Text(
+//                            text = "No recipes found with these ingredients. Try removing some or adding different ones!",
+//                            color = Color.Gray,
+//                            style = MaterialTheme.typography.bodyMedium,
+//                            modifier = Modifier.padding(vertical = 16.dp)
+//                        )
+//                    }
+
                 } else {
                     items(state.recipes) { recipe ->
                         RecipeCard(

@@ -13,7 +13,7 @@ interface SpoonacularApi {
     @GET("recipes/complexSearch")
     suspend fun searchRecipes(
         @Query("apiKey") apiKey: String,
-        @Query("includeIngredients") ingredients: String,
+        @Query("query") query: String,
         @Query("addRecipeInformation") addRecipeInfo: Boolean = true,
         @Query("fillIngredients") fillIngredients: Boolean = true,
         @Query("number") number: Int = 10
