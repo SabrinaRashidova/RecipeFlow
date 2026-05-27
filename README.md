@@ -43,7 +43,8 @@ By configuring `addRecipeInformation = true` and limiting the request count foot
 
 ---
 
-<img width="411" height="880" alt="image" src="https://github.com/user-attachments/assets/5dda2350-3d4d-4c09-82a4-e1300f5590fd" /><img width="414" height="865" alt="image" src="https://github.com/user-attachments/assets/d4bb82de-dc4d-4a91-9410-8ba7ba866f4b" /><img width="407" height="879" alt="image" src="https://github.com/user-attachments/assets/ad488b93-8cb0-4868-8df6-560bdf793c25" />
+<img width="411" height="880" alt="image" src="https://github.com/user-attachments/assets/5dda2350-3d4d-4c09-82a4-e1300f5590fd" /><img width="426" height="873" alt="image" src="https://github.com/user-attachments/assets/dc8eb86b-5f7f-401f-8997-3536320faa07" />
+<img width="407" height="879" alt="image" src="https://github.com/user-attachments/assets/ad488b93-8cb0-4868-8df6-560bdf793c25" />
 
 <img width="438" height="879" alt="image" src="https://github.com/user-attachments/assets/6c50a6d3-dcfb-4070-ba33-7ca056b77e6a" />
 
