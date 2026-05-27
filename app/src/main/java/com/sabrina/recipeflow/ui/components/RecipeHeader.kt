@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +24,12 @@ import androidx.compose.ui.unit.sp
 import com.sabrina.recipeflow.ui.screens.BrandOrange
 
 @Composable
-fun RecipeHeader(favoriteCount: Int, onFavoritesClick: () -> Unit){
+fun RecipeHeader(
+    favoriteCount: Int,
+    onFavoritesClick: () -> Unit,
+    showBackButton: Boolean = false,
+    onBackClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -30,17 +37,52 @@ fun RecipeHeader(favoriteCount: Int, onFavoritesClick: () -> Unit){
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text("Recipe Finder", color = BrandOrange, fontWeight = FontWeight.Bold, fontSize = 20.sp)
-
-        Surface(
-            onClick = onFavoritesClick,
-            color = Color(0xFFFFEBEE),
-            shape = RoundedCornerShape(20.dp)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)) {
-                Icon(Icons.Default.Favorite, contentDescription = null, tint = Color.Red )
-                Spacer(Modifier.width(4.dp))
-                Text("Favorites ($favoriteCount)", color = Color.Red, fontWeight = FontWeight.Bold)
+            if (showBackButton) {
+                IconButton(
+                    onClick = onBackClick,
+                    modifier = Modifier.padding(end = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back to ingredients",
+                        tint = BrandOrange
+                    )
+                }
+            }
+
+            Text(
+                text = "Recipe Finder",
+                color = BrandOrange,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+        }
+
+        if (!showBackButton) {
+            Surface(
+                onClick = onFavoritesClick,
+                color = Color(0xFFFFEBEE),
+                shape = RoundedCornerShape(20.dp)
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                        tint = Color.Black
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "Favorites ($favoriteCount)",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     }

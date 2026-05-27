@@ -8,4 +8,9 @@ sealed class RecipeIntent {
     data class RemoveIngredient(val name: String) : RecipeIntent()
     object SearchRecipes: RecipeIntent()
     data class ToggleFavorite(val recipe: Recipe) : RecipeIntent()
+
+    object ClearSearchResults: RecipeIntent()
+
+    object ClearAllIngredients : RecipeIntent()
+    object ResetToIngredientSelection : RecipeIntent()
 }

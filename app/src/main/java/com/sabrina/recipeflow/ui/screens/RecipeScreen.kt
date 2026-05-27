@@ -36,7 +36,9 @@ fun RecipeScreen(
     ) {
         RecipeHeader(
             favoriteCount = 0,
-            onFavoritesClick = onNavigateToFavorites
+            onFavoritesClick = onNavigateToFavorites,
+            showBackButton = state.recipes.isNotEmpty(),
+            onBackClick = { viewModel.onIntent(RecipeIntent.ClearSearchResults) }
         )
 
         LazyColumn(
@@ -84,21 +86,21 @@ fun RecipeScreen(
                         SelectedIngredientsSection(
                             ingredients = state.ingredients,
                             onRemove = { viewModel.onIntent(RecipeIntent.RemoveIngredient(it)) },
-                            onClearAll = {}
+                            onClearAll = { viewModel.onIntent(RecipeIntent.ClearAllIngredients) } // Wired up Clear All!
                         )
                     }
                 }
 
                 item {
                     PopularIngredientsSection(
-                        onIngredientClick = { ingredient->
+                        selectedIngredients = state.ingredients,
+                        onIngredientClick = { ingredient ->
                             viewModel.onIntent(RecipeIntent.EnteredIngredient(ingredient))
                             viewModel.onIntent(RecipeIntent.AddIngredient)
                         }
                     )
                 }
             }
-
 
             if (state.recipes.isNotEmpty() || state.isLoading) {
                 item {
@@ -116,16 +118,6 @@ fun RecipeScreen(
                             CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                         }
                     }
-//                }else if (state.ingredients.isNotEmpty() && !state.isLoading && state.error == null){
-//                    item {
-//                        Text(
-//                            text = "No recipes found with these ingredients. Try removing some or adding different ones!",
-//                            color = Color.Gray,
-//                            style = MaterialTheme.typography.bodyMedium,
-//                            modifier = Modifier.padding(vertical = 16.dp)
-//                        )
-//                    }
-
                 } else {
                     items(state.recipes) { recipe ->
                         RecipeCard(
@@ -140,6 +132,7 @@ fun RecipeScreen(
         }
     }
 
+    // Fixed bottom action floating display visibility matcher
     if (state.ingredients.isNotEmpty() && state.recipes.isEmpty()) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
             Button(

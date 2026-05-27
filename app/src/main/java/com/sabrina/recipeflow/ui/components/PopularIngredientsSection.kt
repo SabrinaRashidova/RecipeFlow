@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PopularIngredientsSection(
+    selectedIngredients: List<String>,
     onIngredientClick: (String) -> Unit
 ){
     val popularIngredients = listOf(
@@ -26,28 +27,32 @@ fun PopularIngredientsSection(
         "Potatoes", "Carrots", "Beef", "Salmon"
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
-    ) {
-        Text(
-            text = "Popular Ingredients",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
+    val remainingIngredients = popularIngredients.filter { it !in selectedIngredients }
 
-        FlowRow(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+    if (remainingIngredients.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
         ) {
-            popularIngredients.forEach { ingredient ->
-                PopularIngredientChip(
-                    label = ingredient,
-                    onClick = { onIngredientClick(ingredient) }
-                )
+            Text(
+                text = "Popular Ingredients",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                remainingIngredients.forEach { ingredient ->
+                    PopularIngredientChip(
+                        label = ingredient,
+                        onClick = { onIngredientClick(ingredient) }
+                    )
+                }
             }
         }
     }

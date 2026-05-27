@@ -56,21 +56,6 @@ fun FavoritesScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Icon(
-                imageVector = Icons.Default.Favorite,
-                contentDescription = null,
-                tint = Color.Red,
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "My Favorites",
-                style = MaterialTheme.typography.titleMedium,
-                color = BrandOrange,
-                fontWeight = FontWeight.Bold
-            )
         }
 
         LazyColumn(

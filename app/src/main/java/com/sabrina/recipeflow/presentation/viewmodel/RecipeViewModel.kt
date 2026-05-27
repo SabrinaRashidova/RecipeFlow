@@ -47,6 +47,22 @@ class RecipeViewModel @Inject constructor(
             is RecipeIntent.ToggleFavorite -> {
                 toggleFavorite(intent.recipe)
             }
+
+            is RecipeIntent.ClearSearchResults -> {
+                _state.update { it.copy(recipes = emptyList()) }
+            }
+
+            is RecipeIntent.ClearAllIngredients -> {
+                _state.update { it.copy(
+                    ingredients = emptyList(),
+                    recipes = emptyList(),
+                    searchQuery = ""
+                ) }
+            }
+
+            is RecipeIntent.ResetToIngredientSelection -> {
+                _state.update { it.copy(recipes = emptyList()) }
+            }
         }
     }
 
